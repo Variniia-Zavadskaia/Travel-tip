@@ -269,11 +269,12 @@ function onSetFilterBy({ txt, minRate }) {
 }
 
 function renderLocStats() {
-    locService.getLocCountByRateMap()
-    .then(stats => {
+    console.log('jkjk');
+    locService.getLocCountByRateMap().then(stats => {
         handleStats(stats, 'loc-stats-rate')
     })  
-    .then(stats => {
+    console.log(('ffff'));
+    locService.getLocCountByUpdateMap().then(stats => {
         handleStats(stats, 'loc-stats-last-update')
     })
 }
@@ -283,7 +284,7 @@ function handleStats(stats, selector) {
     // stats = { low: 5, medium: 5, high: 5, baba: 55, mama: 30, total: 100 }
     const labels = cleanStats(stats)
     const colors = utilService.getColors()
-
+console.log(stats);
     var sumPercent = 0
     var colorsStr = `${colors[0]} ${0}%, `
     labels.forEach((label, idx) => {

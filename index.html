@@ -72,6 +72,27 @@
                 </section>
             </section>
         </div>
+        <dialog class="loc-edit">
+            <h3>Update loc modal</h3>
+            <form method="dialog" onsubmit="app.onSaveLoc(event, this)">
+              <div>
+                <span>Name</span>:
+                <input name="loc-name" type="text" placeholder="Location" autocomplete="off" />
+              </div>
+              <div class="geo-save" hidden></div>
+        
+              <div>
+                <span>Rate</span>:
+                <input name="loc-rate" type="number" step="1" placeholder="Location Rate" autocomplete="off" />
+              </div>
+        
+              <!-- The default behavior of a dialog modal - it will submit the form and and close the dialog -->
+              <button>Save Location</button>
+              <!-- When using another button just for closing, use type button and create a function that will close the modal -->
+              <button type="button" class="close" onclick="app.onCloseEditModal()">✖</button>
+            </form>
+        
+          </dialog>
     </main>
     <pre class="debug" hidden></pre>
     <div class="user-msg"></div>

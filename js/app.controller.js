@@ -16,6 +16,9 @@ window.app = {
     onShareLoc,
     onSetSortBy,
     onSetFilterBy,
+    onSaveLoc,
+    onCloseEditModal,
+    onOpenEditModal,
 }
 
 function onInit() {
@@ -104,13 +107,31 @@ function onSearchAddress(ev) {
 }
 
 function onAddLoc(geo) {
-    const locName = prompt('Loc name', geo.address || 'Just a place')
-    if (!locName) return
+    // const locName = prompt('Loc name', geo.address || 'Just a place')
+    const geoAddress = geo.address || 'Just a place';
+
+
+    document.querySelector(".geo-save").innerText = JSON.stringify(geo);
+    document.querySelector("input[name=loc-name]").value = geoAddress;
+   
+    onOpenEditModal();
+}
+
+function onSaveLoc(ev, elForm) {
+    const locName = elForm.querySelector("input[name=loc-name]").value
+    const rate = +elForm.querySelector("input[name=loc-rate]").value
+    const geo = JSON.parse(document.querySelector(".geo-save").innerText)
+
+    if (!locName || !rate) {
+        return alert(
+            "Please make sure to enter all required location details properly."
+        )
+    }
 
     const loc = {
         name: locName,
-        rate: +prompt(`Rate (1-5)`, '3'),
-        geo
+        rate: rate,
+        geo: geo
     }
     locService.save(loc)
         .then((savedLoc) => {
@@ -122,6 +143,23 @@ function onAddLoc(geo) {
             console.error('OOPs:', err)
             flashMsg('Cannot add location')
         })
+
+    elForm.reset()
+}
+
+function onOpenEditModal() {
+    const elEditModal = document.querySelector(".loc-edit")
+  
+    // console.log("bookId", bookId)
+
+    elEditModal.showModal()
+}
+
+function onCloseEditModal() {
+    const elEditModal = document.querySelector(".loc-edit")
+    elEditModal.close()
+    // gSelectedBookId = ""
+    elEditModal.querySelector("form").reset()
 }
 
 function loadAndRenderLocs() {

@@ -9,7 +9,7 @@ export const mapService = {
 }
 
 // TODO: Enter your API Key
-const API_KEY = ''
+const API_KEY = 'AIzaSyDUu9G2UqAqEN2Lpze6BzTJ8bJir-PbKTk'
 var gMap
 var gMarker
 
@@ -24,7 +24,7 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
         })
 }
 
-function panTo({lat, lng, zoom=15}) {
+function panTo({ lat, lng, zoom = 15 }) {
     const laLatLng = new google.maps.LatLng(lat, lng)
     gMap.panTo(laLatLng)
     gMap.setZoom(zoom)
@@ -35,17 +35,18 @@ function lookupAddressGeo(geoOrAddress) {
     // const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}`
     // const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452`
 
-    var url = `https://maps.googleapis.com/maps/api/geocode/json?key=${API_KEY}&`
+    var url = `https://maps.googleapis.com/maps/api/geocode/json?`
     url += (geoOrAddress.lat) ? `latlng=${geoOrAddress.lat},${geoOrAddress.lng}` :
         `address=${geoOrAddress}`
+    url += `&key=${API_KEY}`
 
     return fetch(url)
         .then(res => res.json())
         .then(res => {
-            // console.log('RES IS', res)
+            console.log('RES IS', res)
             if (!res.results.length) return new Error('Found nothing')
             res = res.results[0]
-            const {formatted_address, geometry} = res
+            const { formatted_address, geometry } = res
 
             const geo = {
                 address: formatted_address.substring(formatted_address.indexOf(' ')).trim(),
@@ -53,7 +54,7 @@ function lookupAddressGeo(geoOrAddress) {
                 lng: geometry.location.lng,
                 zoom: gMap.getZoom()
             }
-            // console.log('GEO IS', geo)
+            console.log('GEO IS', geo)
             return geo
         })
 
@@ -103,3 +104,6 @@ function _connectGoogleApi() {
         elGoogleApi.onerror = () => reject('GoogleMaps script failed to load')
     })
 }
+
+
+

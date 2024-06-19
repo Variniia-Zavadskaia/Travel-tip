@@ -68,6 +68,14 @@ function remove(locId) {
     return storageService.remove(DB_KEY, locId)
 }
 
+// function askUser(title = 'Sure?') {
+//     const prmUserDecision = Swal.fire({
+//         title,
+//         showDenyButton: true,
+//     })
+//     return prmUserDecision
+// }
+
 function save(loc) {
     if (loc.id) {
         loc.updatedAt = Date.now()

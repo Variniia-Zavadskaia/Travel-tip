@@ -2,13 +2,14 @@ import { utilService } from './services/util.service.js'
 import { locService } from './services/loc.service.js'
 import { mapService } from './services/map.service.js'
 
+var gUpdatedLocId = ""
+
 window.onload = onInit
 
 // To make things easier in this project structure 
 // functions that are called from DOM are defined on a global app object
 window.app = {
     onRemoveLoc,
-    onUpdateLoc,
     onSelectLoc,
     onPanToUserPos,
     onSearchAddress,
@@ -54,7 +55,7 @@ function renderLocs(locs) {
             </p>
             <div class="loc-btns">     
                <button title="Delete" onclick="app.onRemoveLoc('${loc.id}')">🗑️</button>
-               <button title="Edit" onclick="app.onUpdateLoc('${loc.id}')">✏️</button>
+               <button title="Edit" onclick="app.onOpenEditModal('${loc.id}')">✏️</button>
                <button title="Select" onclick="app.onSelectLoc('${loc.id}')">🗺️</button>
             </div>     
         </li>`}).join('')
@@ -113,21 +114,32 @@ function onAddLoc(geo) {
 
     document.querySelector(".geo-save").innerText = JSON.stringify(geo);
     document.querySelector("input[name=loc-name]").value = geoAddress;
+    document.querySelector(".loc-edit h3").innerText = "Add new location";
    
     onOpenEditModal();
 }
 
-function onSaveLoc(ev, elForm) {
-    const locName = elForm.querySelector("input[name=loc-name]").value
-    const rate = +elForm.querySelector("input[name=loc-rate]").value
-    const geo = JSON.parse(document.querySelector(".geo-save").innerText)
+function updateLoc(locId, name, rate) {
+    locService.getById(locId)
+        .then(loc => {
+            if (rate !== loc.rate || name !== loc.name) {
+                loc.rate = rate
+                loc.name = name
+                locService.save(loc)
+                    .then(savedLoc => {
+                        flashMsg(`Rate was set to: ${savedLoc.rate}`)
+                        loadAndRenderLocs()
+                    })
+                    .catch(err => {
+                        console.error('OOPs:', err)
+                        flashMsg('Cannot update location')
+                    })
 
-    if (!locName || !rate) {
-        return alert(
-            "Please make sure to enter all required location details properly."
-        )
-    }
+            }
+        })
+}
 
+function addLoc(locName, rate, geo) {
     const loc = {
         name: locName,
         rate: rate,
@@ -143,13 +155,48 @@ function onSaveLoc(ev, elForm) {
             console.error('OOPs:', err)
             flashMsg('Cannot add location')
         })
+}
+
+function onSaveLoc(ev, elForm) {
+    const locName = elForm.querySelector("input[name=loc-name]").value
+    const rate = +elForm.querySelector("input[name=loc-rate]").value
+    
+    if (!locName || !rate) {
+        return alert(
+            "Please make sure to enter all required location details properly."
+        )
+    }
+
+    if (gUpdatedLocId) {
+        updateLoc(gUpdatedLocId, locName, rate)
+        gUpdatedLocId = ""
+    } else {
+        const geo = JSON.parse(document.querySelector(".geo-save").innerText)
+
+        addLoc(locName, rate, geo)
+    }
 
     elForm.reset()
 }
 
-function onOpenEditModal() {
+function onOpenEditModal(locId) {
     const elEditModal = document.querySelector(".loc-edit")
   
+    if (locId) {
+        document.querySelector(".loc-edit h3").innerText = "Update location";
+
+        gUpdatedLocId = locId;
+
+        locService.getById(locId)
+        .then(loc => {
+            elEditModal.querySelector('input[name=loc-name]').value = loc.name
+            elEditModal.querySelector("input[name=loc-rate]").value = loc.rate
+
+            elEditModal.showModal();
+        })
+
+        return;
+    }
     // console.log("bookId", bookId)
 
     elEditModal.showModal()
@@ -182,26 +229,6 @@ function onPanToUserPos() {
         .catch(err => {
             console.error('OOPs:', err)
             flashMsg('Cannot get your position')
-        })
-}
-
-function onUpdateLoc(locId) {
-    locService.getById(locId)
-        .then(loc => {
-            const rate = prompt('New rate?', loc.rate)
-            if (rate !== loc.rate) {
-                loc.rate = rate
-                locService.save(loc)
-                    .then(savedLoc => {
-                        flashMsg(`Rate was set to: ${savedLoc.rate}`)
-                        loadAndRenderLocs()
-                    })
-                    .catch(err => {
-                        console.error('OOPs:', err)
-                        flashMsg('Cannot update location')
-                    })
-
-            }
         })
 }
 

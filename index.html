@@ -37,7 +37,8 @@
                     <div>
                         <label>
                             Min Rate:
-                            <input name="filter-by-rate" type="range" min="0" max="5" value="0" class="filter-rate-range"
+                            <input name="filter-by-rate" type="range" min="0" max="5" value="0"
+                                class="filter-rate-range"
                                 onchange="this.title=this.value;app.onSetFilterBy({minRate: this.value})" />
                         </label>
                     </div>
@@ -46,6 +47,7 @@
                         <select class="sort-by" onchange="app.onSetSortBy()">
                             <option value="name">Name</option>
                             <option value="rate" selected>Rate</option>
+                            <option value="lastUpdated">Last updated</option>
                         </select>
                         <label>
                             <input class="sort-desc" type="checkbox" oninput="app.onSetSortBy()" />
@@ -57,7 +59,7 @@
                 <ul class="loc-list"></ul>
                 <section class="loc-stats">
                     <h3>Statistics</h3>
-                    <div class="loc-stats-rate">
+                    <div class="loc-stats-rate loc-stats-last-update">
                         <h4>By rate:</h4>
                         <div class="pie"></div>
                         <ul class="legend"></ul>

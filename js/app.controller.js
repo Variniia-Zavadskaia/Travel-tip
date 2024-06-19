@@ -36,6 +36,7 @@ function onInit() {
         })
 }
 
+const setTheme = (theme) => (document.documentElement.className = theme);
 function renderLocs(locs) {
     const selectedLocId = getLocIdFromQueryParams()
 
@@ -88,10 +89,10 @@ function onRemoveLoc(locId) {
                 flashMsg('Cannot remove location')
             })
     })
-    .catch(err => {
-        console.log('remove rejected');
-        console.log(err);
-    })
+        .catch(err => {
+            console.log('remove rejected');
+            console.log(err);
+        })
 }
 
 function onSearchAddress(ev) {
@@ -114,8 +115,6 @@ function onAddLoc(geo) {
 
     document.querySelector(".geo-save").innerText = JSON.stringify(geo);
     document.querySelector("input[name=loc-name]").value = geoAddress;
-    document.querySelector(".loc-edit h3").innerText = "Add new location";
-   
     onOpenEditModal();
 }
 
@@ -181,22 +180,6 @@ function onSaveLoc(ev, elForm) {
 
 function onOpenEditModal(locId) {
     const elEditModal = document.querySelector(".loc-edit")
-  
-    if (locId) {
-        document.querySelector(".loc-edit h3").innerText = "Update location";
-
-        gUpdatedLocId = locId;
-
-        locService.getById(locId)
-        .then(loc => {
-            elEditModal.querySelector('input[name=loc-name]').value = loc.name
-            elEditModal.querySelector("input[name=loc-rate]").value = loc.rate
-
-            elEditModal.showModal();
-        })
-
-        return;
-    }
     // console.log("bookId", bookId)
 
     elEditModal.showModal()
@@ -337,7 +320,7 @@ function renderLocStats() {
     console.log('jkjk');
     locService.getLocCountByRateMap().then(stats => {
         handleStats(stats, 'loc-stats-rate')
-    })  
+    })
     console.log(('ffff'));
     locService.getLocCountByUpdateMap().then(stats => {
         handleStats(stats, 'loc-stats-last-update')
@@ -349,7 +332,7 @@ function handleStats(stats, selector) {
     // stats = { low: 5, medium: 5, high: 5, baba: 55, mama: 30, total: 100 }
     const labels = cleanStats(stats)
     const colors = utilService.getColors()
-console.log(stats);
+    console.log(stats);
     var sumPercent = 0
     var colorsStr = `${colors[0]} ${0}%, `
     labels.forEach((label, idx) => {

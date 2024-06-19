@@ -13,8 +13,12 @@ header {
 header h1 {
     margin: 0;
 }
-
-input[type=text],input[type=number] {
+.toggle-container{
+    display: flex;
+    justify-content: space-between;
+}
+input[type=text],
+input[type=number] {
     line-height: 2em;
     background-color: var(--color1);
     border: 0;
@@ -44,4 +48,3 @@ button:hover {
 .smaller {
     font-size: .8em;
 }
-

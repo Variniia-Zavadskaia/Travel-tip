@@ -2,6 +2,7 @@ export const utilService = {
     saveToStorage,
     loadFromStorage,
     makeId,
+    askUser,
     getRandomIntInclusive,
     randomPastTime,
     getRandomLatLng,
@@ -27,6 +28,14 @@ function makeId(length = 5) {
         txt += possible.charAt(Math.floor(Math.random() * possible.length))
     }
     return txt
+
+}
+
+function askUser(title = 'Sure?') {
+    return Swal.fire({
+        title,
+        showDenyButton: true,
+    }).then(({ value }) => value ? 'Ok!' : Promise.reject('Remove rejected'));
 }
 
 function getRandomIntInclusive(min, max) {

@@ -7,9 +7,9 @@ export const mapService = {
     lookupAddressGeo,
     addClickListener
 }
-
+// AIzaSyDUu9G2UqAqEN2Lpze6BzTJ8bJir-PbKTk
 // TODO: Enter your API Key
-const API_KEY = 'AIzaSyDUu9G2UqAqEN2Lpze6BzTJ8bJir-PbKTk'
+const API_KEY = ''
 var gMap
 var gMarker
 
